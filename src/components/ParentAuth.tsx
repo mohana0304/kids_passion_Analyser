@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,58 +18,55 @@ export const ParentAuth = ({ onAuthSuccess }: ParentAuthProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast({
-        title: "Missing Information",
-        description: "Please enter both email and password",
-        variant: "destructive",
-      });
-      return;
-    }
+// Firebase config from .env
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  // Add other config fields as needed
+};
 
-    // For demo purposes, we'll just simulate authentication
-    // In a real app, this would connect to a backend authentication service
-    
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    toast({
+      title: "Missing Information",
+      description: "Please enter both email and password",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  try {
     if (isLogin) {
-      // Simulate login
-      const savedParent = localStorage.getItem("kidsInterestIndicator_parent");
-      if (savedParent) {
-        const parentData = JSON.parse(savedParent);
-        if (parentData.email === email) {
-          onAuthSuccess(email);
-          toast({
-            title: "Welcome back!",
-            description: "Successfully logged in to your account",
-          });
-          return;
-        }
-      }
-      
+      // Firebase login
+      await signInWithEmailAndPassword(auth, email, password);
+      onAuthSuccess(email);
       toast({
-        title: "Account not found",
-        description: "Please check your credentials or sign up",
-        variant: "destructive",
+        title: "Welcome back!",
+        description: "Successfully logged in to your account",
       });
     } else {
-      // Simulate registration
-      const parentData = {
-        email,
-        password, // In a real app, this would be hashed
-        registrationDate: new Date().toISOString()
-      };
-      
-      localStorage.setItem("kidsInterestIndicator_parent", JSON.stringify(parentData));
+      // Firebase registration
+      await createUserWithEmailAndPassword(auth, email, password);
       onAuthSuccess(email);
-      
       toast({
         title: "Account created!",
         description: "Welcome to Kids Interest Indicator",
       });
     }
-  };
+  } catch (error: any) {
+    toast({
+      title: "Authentication Error",
+      description: error.message,
+      variant: "destructive",
+    });
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center p-4">
