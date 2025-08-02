@@ -14,7 +14,7 @@ import { BuildingGame } from "@/components/games/BuildingGame";
 import { DrawingGame } from "@/components/games/DrawingGame";
 import { WordLearningGame } from "@/components/games/WordLearningGame";
 import { CookingGame } from "@/components/games/CookingGame";
-import FashionGame from "@/components/games/fashionGame";
+import FashionGame from "@/components/games/FashionGame";
 import SportsGame from "@/components/games/SportsGame";
 
 interface GameSelectorProps {

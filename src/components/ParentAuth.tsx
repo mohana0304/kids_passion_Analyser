@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, UserPlus, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+const logo = "/logo.png";
 
 interface ParentAuthProps {
   onAuthSuccess: (parentEmail: string) => void;
@@ -72,7 +73,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 shadow-xl">
         <div className="text-center mb-8">
-          <div className="text-6xl mb-4 animate-bounce">👨‍👩‍👧‍👦</div>
+          {/* <div className="text-6xl mb-4 animate-bounce">👨‍👩‍👧‍👦</div> */}
+          <div className="text-6xl mb-4 ">
+            <center><img src={logo} alt="Logo" width={100} height={100} /></center>
+          </div>
           <h1 className="text-3xl font-bold text-primary mb-2">
             Kids Interest Indicator
           </h1>
