@@ -1,4 +1,5 @@
-// import { useState } from "react";
+
+// import { useEffect, useState } from "react";
 // import { Card } from "@/components/ui/card";
 // import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
@@ -6,6 +7,10 @@
 // import { Settings, BarChart3, User } from "lucide-react";
 // import { GameCard } from "@/components/GameCard";
 // import { useGame } from "@/context/GameContext";
+
+// // Firestore
+// import { doc, getDoc, setDoc } from "firebase/firestore";
+// import { db } from "@/lib/firebase";
 
 // // Game Components
 // import { MusicGame } from "@/components/games/MusicGame";
@@ -26,6 +31,36 @@
 //   const [childName, setChildName] = useState("");
 //   const [showNameInput, setShowNameInput] = useState(false);
 //   const { recordGameSession, currentChild, setCurrentChild } = useGame();
+
+//   useEffect(() => {
+//     const fetchChildName = async () => {
+//       const savedId = localStorage.getItem("childId");
+//       if (savedId) {
+//         const docRef = doc(db, "children", savedId);
+//         const docSnap = await getDoc(docRef);
+//         if (docSnap.exists()) {
+//           const name = docSnap.data().name;
+//           setCurrentChild(name);
+//         }
+//       }
+//     };
+
+//     fetchChildName();
+//   }, [setCurrentChild]);
+
+//   const handleChildNameSubmit = async () => {
+//     const trimmed = childName.trim();
+//     if (!trimmed) return;
+
+//     const childId = trimmed.toLowerCase().replace(/\s+/g, "_");
+
+//     const docRef = doc(db, "children", childId);
+//     await setDoc(docRef, { name: trimmed });
+
+//     localStorage.setItem("childId", childId);
+//     setCurrentChild(trimmed);
+//     setShowNameInput(false);
+//   };
 
 //   const games = [
 //     {
@@ -82,7 +117,7 @@
 //       description: "Design clothes and create amazing outfits!",
 //       icon: "👗",
 //       color: "fashion",
-//       component: FashionGame // Coming soon
+//       component: FashionGame
 //     },
 //     {
 //       id: "sports",
@@ -90,7 +125,7 @@
 //       description: "Play soccer, basketball, and other fun sports!",
 //       icon: "⚽",
 //       color: "sports",
-//       component: SportsGame // Coming soon
+//       component: SportsGame
 //     }
 //   ];
 
@@ -114,21 +149,15 @@
 //     setSelectedGame(null);
 //   };
 
-//   const handleChildNameSubmit = () => {
-//     if (childName.trim()) {
-//       setCurrentChild(childName.trim());
-//       setShowNameInput(false);
-//     }
-//   };
-
 //   if (selectedGame) {
 //     const game = games.find(g => g.id === selectedGame);
 //     if (game && game.component) {
 //       const GameComponent = game.component;
 //       return (
 //         <GameComponent
-//           onGameComplete={(score, timeSpent) => handleGameComplete(selectedGame, score, timeSpent)}
-//         />
+//           onGameComplete={(score, timeSpent) => handleGameComplete(selectedGame, score, timeSpent)} onBack={function (): void {
+//             throw new Error("Function not implemented.");
+//           } }        />
 //       );
 //     }
 //   }
@@ -153,7 +182,7 @@
 //             <User className="w-6 h-6 text-primary" />
 //             <div>
 //               <p className="text-sm text-muted-foreground">Playing as:</p>
-//               <p className="font-semibold">{currentChild}</p>
+//               <p className="font-semibold">{currentChild || "No name yet"}</p>
 //             </div>
 //             <Button
 //               variant="outline"
@@ -164,7 +193,7 @@
 //               Change
 //             </Button>
 //           </Card>
-          
+
 //           <Button
 //             onClick={onShowDashboard}
 //             className="bg-primary hover:bg-primary/90"
@@ -193,8 +222,8 @@
 //                   <Button onClick={handleChildNameSubmit} className="flex-1">
 //                     Save
 //                   </Button>
-//                   <Button 
-//                     variant="outline" 
+//                   <Button
+//                     variant="outline"
 //                     onClick={() => setShowNameInput(false)}
 //                   >
 //                     Cancel
@@ -238,10 +267,11 @@ import { Label } from "@/components/ui/label";
 import { Settings, BarChart3, User } from "lucide-react";
 import { GameCard } from "@/components/GameCard";
 import { useGame } from "@/context/GameContext";
-
-// Firestore
+import { useToast } from "@/hooks/use-toast";
+import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 
 // Game Components
 import { MusicGame } from "@/components/games/MusicGame";
@@ -261,36 +291,96 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [childName, setChildName] = useState("");
   const [showNameInput, setShowNameInput] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { recordGameSession, currentChild, setCurrentChild } = useGame();
+  const { toast } = useToast();
+  const [parentUid, setParentUid] = useState<string | null>(null);
 
+  // Monitor authentication state to get parent's UID
   useEffect(() => {
-    const fetchChildName = async () => {
-      const savedId = localStorage.getItem("childId");
-      if (savedId) {
-        const docRef = doc(db, "children", savedId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const name = docSnap.data().name;
-          setCurrentChild(name);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setParentUid(user.uid);
+        // Fetch child name if stored
+        const savedChildId = localStorage.getItem("childId");
+        if (savedChildId) {
+          fetchChildName(user.uid, savedChildId);
         }
+      } else {
+        setParentUid(null);
+        setCurrentChild("");
+        localStorage.removeItem("childId");
       }
-    };
-
-    fetchChildName();
+    });
+    return () => unsubscribe();
   }, [setCurrentChild]);
+
+  const fetchChildName = async (uid: string, childId: string) => {
+    const docRef = doc(db, "parents", uid, "children", childId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const name = docSnap.data().name;
+      setCurrentChild(name);
+    }
+  };
+
+  const checkNameUnique = async (name: string) => {
+    if (!parentUid) return false;
+    const childId = name.trim().toLowerCase().replace(/\s+/g, "_");
+    const docRef = doc(db, "parents", parentUid, "children", childId);
+    const docSnap = await getDoc(docRef);
+    return !docSnap.exists();
+  };
 
   const handleChildNameSubmit = async () => {
     const trimmed = childName.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      setNameError("Child's name is required");
+      return;
+    }
+    if (!parentUid) {
+      toast({
+        title: "Authentication Error",
+        description: "Please log in to add a child",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    const childId = trimmed.toLowerCase().replace(/\s+/g, "_");
+    setLoading(true);
+    setNameError("");
+    const isUnique = await checkNameUnique(trimmed);
+    if (!isUnique) {
+      setNameError("This name is already used for another child");
+      setLoading(false);
+      return;
+    }
 
-    const docRef = doc(db, "children", childId);
-    await setDoc(docRef, { name: trimmed });
+    try {
+      const childId = trimmed.toLowerCase().replace(/\s+/g, "_");
+      const docRef = doc(db, "parents", parentUid, "children", childId);
+      await setDoc(docRef, {
+        name: trimmed,
+        createdAt: new Date().toISOString(),
+      });
 
-    localStorage.setItem("childId", childId);
-    setCurrentChild(trimmed);
-    setShowNameInput(false);
+      localStorage.setItem("childId", childId);
+      setCurrentChild(trimmed);
+      setShowNameInput(false);
+      toast({
+        title: "Child Added!",
+        description: `Welcome, ${trimmed}! Ready to play?`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to save child name: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const games = [
@@ -300,7 +390,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Play piano, guitar, and drums to create beautiful music!",
       icon: "🎵",
       color: "music",
-      component: MusicGame
+      component: MusicGame,
     },
     {
       id: "forest",
@@ -308,7 +398,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Explore nature and discover amazing animals!",
       icon: "🌳",
       color: "nature",
-      component: ForestGame
+      component: ForestGame,
     },
     {
       id: "building",
@@ -316,7 +406,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Build towers, bridges, and amazing structures!",
       icon: "🏗️",
       color: "engineering",
-      component: BuildingGame
+      component: BuildingGame,
     },
     {
       id: "drawing",
@@ -324,7 +414,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Create beautiful artwork with colors and brushes!",
       icon: "🎨",
       color: "art",
-      component: DrawingGame
+      component: DrawingGame,
     },
     {
       id: "learning",
@@ -332,7 +422,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Learn letters, numbers, and new words!",
       icon: "📚",
       color: "learning",
-      component: WordLearningGame
+      component: WordLearningGame,
     },
     {
       id: "cooking",
@@ -340,7 +430,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Cook delicious meals and learn about ingredients!",
       icon: "🍳",
       color: "cooking",
-      component: CookingGame
+      component: CookingGame,
     },
     {
       id: "fashion",
@@ -348,7 +438,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Design clothes and create amazing outfits!",
       icon: "👗",
       color: "fashion",
-      component: FashionGame
+      component: FashionGame,
     },
     {
       id: "sports",
@@ -356,37 +446,56 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       description: "Play soccer, basketball, and other fun sports!",
       icon: "⚽",
       color: "sports",
-      component: SportsGame
-    }
+      component: SportsGame,
+    },
   ];
 
   const handleGameSelect = (gameId: string) => {
-    const game = games.find(g => g.id === gameId);
+    if (!currentChild) {
+      setShowNameInput(true);
+      toast({
+        title: "Child's Name Required",
+        description: "Please enter your child's name to start playing",
+        variant: "destructive",
+      });
+      return;
+    }
+    const game = games.find((g) => g.id === gameId);
     if (game && game.component) {
       setSelectedGame(gameId);
     }
   };
 
-  const handleGameComplete = (gameId: string, score: number, timeSpent: number) => {
-    const game = games.find(g => g.id === gameId);
-    if (game) {
+  const handleGameComplete = async (gameId: string, score: number, timeSpent: number) => {
+    const game = games.find((g) => g.id === gameId);
+    if (game && parentUid) {
+      // Record session directly in Firestore since parentUid isn't in GameSession type
+      await addDoc(collection(db, "parents", parentUid, "gameSessions"), {
+        gameType: game.title,
+        score,
+        timeSpent,
+        timestamp: Date.now(),
+        createdAt: new Date().toISOString(),
+      });
+      // Optionally call recordGameSession if it handles local state or other logic
       recordGameSession({
         gameType: game.title,
         score,
         timeSpent,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     }
     setSelectedGame(null);
   };
 
   if (selectedGame) {
-    const game = games.find(g => g.id === selectedGame);
+    const game = games.find((g) => g.id === selectedGame);
     if (game && game.component) {
       const GameComponent = game.component;
       return (
         <GameComponent
           onGameComplete={(score, timeSpent) => handleGameComplete(selectedGame, score, timeSpent)}
+          onBack={() => setSelectedGame(null)}
         />
       );
     }
@@ -399,7 +508,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
         <div className="text-center space-y-4">
           <div className="text-8xl animate-bounce">🎮</div>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Kids Interest Indicator
+            Kids Passion Analyser
           </h1>
           <p className="text-xl text-muted-foreground">
             Discover your child's natural talents through fun games!
@@ -444,17 +553,31 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
                   <Input
                     id="childName"
                     value={childName}
-                    onChange={(e) => setChildName(e.target.value)}
+                    onChange={(e) => {
+                      setChildName(e.target.value);
+                      setNameError("");
+                    }}
                     placeholder="Enter your child's name"
                   />
+                  {nameError && (
+                    <p className="text-sm text-red-500 mt-1">{nameError}</p>
+                  )}
                 </div>
                 <div className="flex gap-2">
-                  <Button onClick={handleChildNameSubmit} className="flex-1">
-                    Save
+                  <Button
+                    onClick={handleChildNameSubmit}
+                    className="flex-1"
+                    disabled={loading}
+                  >
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => setShowNameInput(false)}
+                    onClick={() => {
+                      setShowNameInput(false);
+                      setChildName("");
+                      setNameError("");
+                    }}
                   >
                     Cancel
                   </Button>
