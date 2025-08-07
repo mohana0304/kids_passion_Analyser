@@ -154,22 +154,35 @@ export const MusicGame = ({ onGameComplete }: MusicGameProps) => {
     const timeSpent = (Date.now() - startTime) / 1000;
     onGameComplete(score, timeSpent);
     toast({
-      title: "🎵 Music Game Complete!",
+      title: "𝄞♫⋆｡♪˚♬ ﾟ Music Game Complete!",
       description: `You scored ${score} points! You have musical talent!`,
       duration: 3000,
     });
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="text-center space-y-4">
-        <div className="text-6xl animate-bounce">🎵</div>
-        <h1 className="text-4xl font-bold text-music">Music Game</h1>
-        <p className="text-lg text-muted-foreground">
-          {selectedInstrument ? `Play the ${selectedInstrument} keys and try the sample song!` : 'Choose your instrument to start!'}
-        </p>
-      </div>
-      <Card className="p-8 bg-gradient-to-br from-music/10 to-music/20">
+    <div 
+      className="w-full min-h-screen relative"
+      style={{
+        backgroundImage: 'url(/music-background.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-sm pointer-events-none"></div>
+      
+      <div className="relative z-10 max-w-4xl mx-auto p-6 space-y-6">
+        <div className="text-center space-y-4">
+          <div className="text-6xl animate-bounce">🎵</div>
+          <h1 className="text-4xl font-bold text-music drop-shadow-lg">Music Game</h1>
+          <p className="text-lg text-muted-foreground drop-shadow-md">
+            {selectedInstrument ? `Play the ${selectedInstrument} keys and try the sample song!` : 'Choose your instrument to start!'}
+          </p>
+        </div>
+        <Card className="p-8 bg-white/80 backdrop-blur-md border-2 border-music/20 shadow-xl">
         <div className="text-center mb-6">
           <div className="text-2xl font-bold text-music">Score: {score}</div>
         </div>
@@ -227,7 +240,8 @@ export const MusicGame = ({ onGameComplete }: MusicGameProps) => {
             Finish Music Session
           </Button>
         </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
