@@ -6,10 +6,66 @@ import { useToast } from "@/hooks/use-toast";
 
 // Sample SVG outlines for coloring
 const outlineImages = [
-  {
-    name: "Butterfly",
-    svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M100 100 Q70 20 20 60 Q0 100 20 140 Q70 180 100 100 Q130 20 180 60 Q200 100 180 140 Q130 180 100 100 Z' stroke='black' stroke-width='3' fill='white'/></svg>`
-  },
+{
+  name: "Dog",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <ellipse cx='100' cy='120' rx='55' ry='45' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='55' cy='70' rx='20' ry='35' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='145' cy='70' rx='20' ry='35' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='80' cy='125' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='120' cy='125' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='100' cy='150' rx='15' ry='8' stroke='black' stroke-width='2' fill='white'/>
+  </svg>`
+},
+
+{
+  name: "Teddy",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <ellipse cx='100' cy='120' rx='45' ry='40' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='70' cy='70' rx='18' ry='18' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='130' cy='70' rx='18' ry='18' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='85' cy='140' rx='10' ry='15' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='115' cy='140' rx='10' ry='15' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='100' cy='100' rx='20' ry='18' stroke='black' stroke-width='2' fill='white'/>
+  </svg>`
+},
+{
+  name: "Girl Doll",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <ellipse cx='100' cy='80' rx='30' ry='30' stroke='black' stroke-width='3' fill='white'/>
+    <rect x='70' y='110' width='60' height='50' rx='20' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='70' cy='150' rx='10' ry='20' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='130' cy='150' rx='10' ry='20' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='55' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='145' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+  </svg>`
+},
+
+
+
+{
+  name: "Bird",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <ellipse cx='120' cy='120' rx='40' ry='30' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='80' cy='110' rx='25' ry='18' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='135' cy='110' rx='5' ry='7' stroke='black' stroke-width='2' fill='white'/>
+    <polygon points='160,120 180,115 160,130' stroke='black' stroke-width='2' fill='white'/>
+    <path d='M60 120 Q40 140 80 140' stroke='black' stroke-width='2' fill='none'/>
+  </svg>`
+},
+{
+  name: "Joker",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <ellipse cx='100' cy='120' rx='45' ry='55' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='100' cy='80' rx='30' ry='25' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='80' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='120' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='100' cy='150' rx='15' ry='8' stroke='black' stroke-width='2' fill='white'/>
+    <polygon points='70,50 100,30 130,50 100,60' stroke='black' stroke-width='2' fill='white'/>
+    <circle cx='100' cy='30' r='5' stroke='black' stroke-width='2' fill='white'/>
+  </svg>`
+},
+
   {
     name: "Cat",
     svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='100' cy='120' rx='60' ry='50' stroke='black' stroke-width='3' fill='white'/><polygon points='40,80 60,40 80,80' stroke='black' stroke-width='3' fill='white'/><polygon points='160,80 140,40 120,80' stroke='black' stroke-width='3' fill='white'/><ellipse cx='80' cy='120' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/><ellipse cx='120' cy='120' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/></svg>`
@@ -244,13 +300,13 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
         aria-hidden="true"
       />
       <div className="max-w-4xl mx-auto p-6 space-y-6 relative z-10">
-        <div className="text-center space-y-4">
-          <div className="text-6xl animate-bounce">🎨</div>
+      <div className="text-center space-y-4">
+        <div className="text-6xl animate-bounce">🎨</div>
           <h1 className="text-4xl font-bold text-art">Drawing & Coloring</h1>
-          <p className="text-lg text-muted-foreground">
-            Create beautiful artwork with colors and brushes!
-          </p>
-        </div>
+        <p className="text-lg text-muted-foreground">
+          Create beautiful artwork with colors and brushes!
+        </p>
+      </div>
 
         {/* Mode Selector */}
         <div className="flex justify-center gap-4 mb-6">
@@ -269,45 +325,45 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
         </div>
 
         {mode === 'drawing' && (
-          <Card className="p-8 bg-gradient-to-br from-art/10 to-art/20">
-            <div className="flex justify-between items-center mb-6">
-              <div className="text-2xl font-bold text-art">Score: {score}</div>
-              <div className="text-lg text-art">
-                Keep drawing to earn more points!
-              </div>
-            </div>
+      <Card className="p-8 bg-gradient-to-br from-art/10 to-art/20">
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-2xl font-bold text-art">Score: {score}</div>
+          <div className="text-lg text-art">
+            Keep drawing to earn more points!
+          </div>
+        </div>
 
-            {/* Color Palette */}
-            <div className="flex justify-center space-x-2 mb-4">
-              {colors.map((color) => (
-                <Button
-                  key={color}
-                  onClick={() => setCurrentColor(color)}
-                  className={`
-                    w-10 h-10 rounded-full border-4 transition-all duration-200
-                    ${currentColor === color ? 'border-art scale-110' : 'border-white hover:scale-105'}
-                  `}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
+        {/* Color Palette */}
+        <div className="flex justify-center space-x-2 mb-4">
+          {colors.map((color) => (
+            <Button
+              key={color}
+              onClick={() => setCurrentColor(color)}
+              className={`
+                w-10 h-10 rounded-full border-4 transition-all duration-200
+                ${currentColor === color ? 'border-art scale-110' : 'border-white hover:scale-105'}
+              `}
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </div>
 
-            {/* Brush Size */}
-            <div className="flex justify-center items-center space-x-4 mb-6">
-              <span className="text-art font-semibold">Brush Size:</span>
-              {[2, 5, 10, 15].map((size) => (
-                <Button
-                  key={size}
-                  onClick={() => setBrushSize(size)}
-                  className={`
-                    w-12 h-12 rounded-full transition-all duration-200
-                    ${brushSize === size ? 'bg-art text-art-foreground' : 'bg-art/20 text-art hover:bg-art/30'}
-                  `}
-                >
-                  {size}
-                </Button>
-              ))}
-            </div>
+        {/* Brush Size */}
+        <div className="flex justify-center items-center space-x-4 mb-6">
+          <span className="text-art font-semibold">Brush Size:</span>
+          {[2, 5, 10, 15].map((size) => (
+            <Button
+              key={size}
+              onClick={() => setBrushSize(size)}
+              className={`
+                w-12 h-12 rounded-full transition-all duration-200
+                ${brushSize === size ? 'bg-art text-art-foreground' : 'bg-art/20 text-art hover:bg-art/30'}
+              `}
+            >
+              {size}
+            </Button>
+          ))}
+        </div>
 
             <div className="flex">
               {/* Creative Mode Sidebar */}
@@ -325,15 +381,15 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
               {/* Drawing Canvas with SVG overlay for shapes */}
               <div className="flex justify-center items-center w-full" style={{ minHeight: 400 }}>
                 <div className="bg-white rounded-lg mb-6 relative flex justify-center items-center" style={{ width: 600, height: 400 }}>
-                  <canvas
-                    ref={canvasRef}
-                    width={600}
-                    height={400}
-                    className="border-2 border-art/30 rounded-lg cursor-crosshair"
-                    onMouseDown={startDrawing}
-                    onMouseMove={draw}
-                    onMouseUp={stopDrawing}
-                    onMouseLeave={stopDrawing}
+          <canvas
+            ref={canvasRef}
+            width={600}
+            height={400}
+            className="border-2 border-art/30 rounded-lg cursor-crosshair"
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
                     style={{ position: 'absolute', left: 0, top: 0, zIndex: 1, background: 'transparent' }}
                   />
                   {/* SVG overlay for shapes */}
@@ -368,43 +424,43 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
                   </svg>
                 </div>
               </div>
-            </div>
+        </div>
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <Button
-                onClick={clearCanvas}
-                className="bg-art/20 hover:bg-art/30 text-art p-4 h-16"
-              >
-                <Eraser className="w-6 h-6 mr-2" />
-                Clear Canvas
-              </Button>
-              <Button
-                onClick={createMasterpiece}
-                className="bg-art/20 hover:bg-art/30 text-art p-4 h-16"
-              >
-                <Palette className="w-6 h-6 mr-2" />
-                Masterpiece
-              </Button>
-              <Button
+        {/* Action Buttons */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <Button
+            onClick={clearCanvas}
+            className="bg-art/20 hover:bg-art/30 text-art p-4 h-16"
+          >
+            <Eraser className="w-6 h-6 mr-2" />
+            Clear Canvas
+          </Button>
+          <Button
+            onClick={createMasterpiece}
+            className="bg-art/20 hover:bg-art/30 text-art p-4 h-16"
+          >
+            <Palette className="w-6 h-6 mr-2" />
+            Masterpiece
+          </Button>
+          <Button
                 onClick={() => setCreativeMode((v) => !v)}
                 className={`bg-art/20 hover:bg-art/30 text-art p-4 h-16 ${creativeMode ? 'ring-2 ring-art' : ''}`}
-              >
-                <Brush className="w-6 h-6 mr-2" />
-                Creative Mode
-              </Button>
-            </div>
+          >
+            <Brush className="w-6 h-6 mr-2" />
+            Creative Mode
+          </Button>
+        </div>
 
-            <div className="text-center">
-              <Button
-                onClick={endGame}
-                className="bg-art hover:bg-art/90 text-art-foreground px-8 py-3 text-lg"
-              >
-                <Palette className="w-5 h-5 mr-2" />
-                Finish Artwork
-              </Button>
-            </div>
-          </Card>
+        <div className="text-center">
+          <Button
+            onClick={endGame}
+            className="bg-art hover:bg-art/90 text-art-foreground px-8 py-3 text-lg"
+          >
+            <Palette className="w-5 h-5 mr-2" />
+            Finish Artwork
+          </Button>
+        </div>
+      </Card>
         )}
 
         {mode === 'coloring' && (
@@ -451,7 +507,7 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
             )}
           </Card>
         )}
-      </div>
+    </div>
     </>
   );
 };
