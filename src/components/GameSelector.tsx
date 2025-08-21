@@ -389,7 +389,7 @@ export const GameSelector = ({ onShowDashboard }: GameSelectorProps) => {
       return (
         <GameComponent
           onGameComplete={(score, timeSpent) => handleGameComplete(selectedGame, score, timeSpent)}
-          onBack={() => setSelectedGame(null)} parentUid={""}        />
+          onBack={() => setSelectedGame(null)}     />
       );
     }
   }
