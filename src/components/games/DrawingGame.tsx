@@ -21,14 +21,58 @@ const outlineImages = [
 {
   name: "Teddy",
   svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <ellipse cx='100' cy='120' rx='45' ry='40' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='70' cy='70' rx='18' ry='18' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='130' cy='70' rx='18' ry='18' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='85' cy='140' rx='10' ry='15' stroke='black' stroke-width='2' fill='white'/>
-    <ellipse cx='115' cy='140' rx='10' ry='15' stroke='black' stroke-width='2' fill='white'/>
-    <ellipse cx='100' cy='100' rx='20' ry='18' stroke='black' stroke-width='2' fill='white'/>
+    <!-- head -->
+    <circle cx='100' cy='70' r='30' stroke='black' stroke-width='3' fill='white'/>
+    <!-- ears -->
+    <circle cx='70' cy='50' r='12' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='130' cy='50' r='12' stroke='black' stroke-width='3' fill='white'/>
+    <!-- body -->
+    <ellipse cx='100' cy='130' rx='40' ry='50' stroke='black' stroke-width='3' fill='white'/>
+    <!-- arms -->
+    <ellipse cx='55' cy='130' rx='15' ry='35' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='145' cy='130' rx='15' ry='35' stroke='black' stroke-width='3' fill='white'/>
+    <!-- legs -->
+    <ellipse cx='80' cy='180' rx='15' ry='20' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='120' cy='180' rx='15' ry='20' stroke='black' stroke-width='3' fill='white'/>
   </svg>`
 },
+{
+  name: "Bird",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <!-- body -->
+    <ellipse cx='110' cy='120' rx='40' ry='30' stroke='black' stroke-width='3' fill='white'/>
+    <!-- head -->
+    <circle cx='70' cy='100' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <!-- beak -->
+    <polygon points='50,100 35,105 50,110' stroke='black' stroke-width='2' fill='white'/>
+    <!-- wings -->
+    <ellipse cx='110' cy='120' rx='20' ry='15' stroke='black' stroke-width='2' fill='white'/>
+    <!-- legs -->
+    <line x1='100' y1='150' x2='95' y2='170' stroke='black' stroke-width='2'/>
+    <line x1='115' y1='150' x2='120' y2='170' stroke='black' stroke-width='2'/>
+  </svg>`
+}
+,
+{
+  name: "Cat",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <!-- head -->
+    <circle cx='100' cy='70' r='30' stroke='black' stroke-width='3' fill='white'/>
+    <!-- ears -->
+    <polygon points='75,50 65,30 85,45' stroke='black' stroke-width='3' fill='white'/>
+    <polygon points='125,50 135,30 115,45' stroke='black' stroke-width='3' fill='white'/>
+    <!-- body -->
+    <ellipse cx='100' cy='130' rx='40' ry='50' stroke='black' stroke-width='3' fill='white'/>
+    <!-- legs -->
+    <ellipse cx='80' cy='180' rx='10' ry='20' stroke='black' stroke-width='3' fill='white'/>
+    <ellipse cx='120' cy='180' rx='10' ry='20' stroke='black' stroke-width='3' fill='white'/>
+    <!-- tail -->
+    <path d='M140 150 Q170 140 160 110' stroke='black' stroke-width='3' fill='none'/>
+  </svg>`
+}
+,
+
+
 {
   name: "Girl Doll",
   svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -42,34 +86,68 @@ const outlineImages = [
 },
 
 
-
-{
-  name: "Bird",
+  {
+  name: "Flower",
   svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <ellipse cx='120' cy='120' rx='40' ry='30' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='80' cy='110' rx='25' ry='18' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='135' cy='110' rx='5' ry='7' stroke='black' stroke-width='2' fill='white'/>
-    <polygon points='160,120 180,115 160,130' stroke='black' stroke-width='2' fill='white'/>
-    <path d='M60 120 Q40 140 80 140' stroke='black' stroke-width='2' fill='none'/>
+    <!-- petals -->
+    <circle cx='100' cy='60' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='140' cy='100' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='100' cy='140' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='60' cy='100' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='80' cy='80' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='120' cy='80' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='80' cy='120' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='120' cy='120' r='20' stroke='black' stroke-width='3' fill='white'/>
+    <!-- center -->
+    <circle cx='100' cy='100' r='15' stroke='black' stroke-width='3' fill='white'/>
+    
   </svg>`
-},
+}
+,
+{
+  name: "Tree",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <!-- leaves -->
+    <circle cx='100' cy='70' r='40' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='70' cy='90' r='35' stroke='black' stroke-width='3' fill='white'/>
+    <circle cx='130' cy='90' r='35' stroke='black' stroke-width='3' fill='white'/>
+    <!-- trunk -->
+    <rect x='90' y='110' width='20' height='50' stroke='black' stroke-width='3' fill='white'/>
+  </svg>`
+}
+,
+{
+  name: "Face",
+  svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <!-- head -->
+    <circle cx='100' cy='100' r='40' stroke='black' stroke-width='3' fill='white'/>
+    <!-- eyes -->
+    <ellipse cx='85' cy='90' rx='5' ry='8' stroke='black' stroke-width='2' fill='white'/>
+    <ellipse cx='115' cy='90' rx='5' ry='8' stroke='black' stroke-width='2' fill='white'/>
+    <!-- smile -->
+    <path d='M80 115 Q100 130 120 115' stroke='black' stroke-width='2' fill='none'/>
+    <!-- hair -->
+    <path d='M60 80 Q100 40 140 80' stroke='black' stroke-width='3' fill='none'/>
+  </svg>`
+}
+,
 {
   name: "Joker",
   svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <ellipse cx='100' cy='120' rx='45' ry='55' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='100' cy='80' rx='30' ry='25' stroke='black' stroke-width='3' fill='white'/>
-    <ellipse cx='80' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
-    <ellipse cx='120' cy='80' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/>
-    <ellipse cx='100' cy='150' rx='15' ry='8' stroke='black' stroke-width='2' fill='white'/>
-    <polygon points='70,50 100,30 130,50 100,60' stroke='black' stroke-width='2' fill='white'/>
+    <!-- face -->
+    <circle cx='100' cy='100' r='40' stroke='black' stroke-width='3' fill='white'/>
+    <!-- eyes -->
+    <circle cx='85' cy='90' r='5' stroke='black' stroke-width='2' fill='white'/>
+    <circle cx='115' cy='90' r='5' stroke='black' stroke-width='2' fill='white'/>
+    <!-- smile -->
+    <path d='M80 115 Q100 135 120 115' stroke='black' stroke-width='2' fill='none'/>
+    <!-- hat -->
+    <polygon points='60,65 100,30 140,65' stroke='black' stroke-width='3' fill='white'/>
+    <!-- hat balls -->
     <circle cx='100' cy='30' r='5' stroke='black' stroke-width='2' fill='white'/>
   </svg>`
-},
-
-  {
-    name: "Cat",
-    svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'><ellipse cx='100' cy='120' rx='60' ry='50' stroke='black' stroke-width='3' fill='white'/><polygon points='40,80 60,40 80,80' stroke='black' stroke-width='3' fill='white'/><polygon points='160,80 140,40 120,80' stroke='black' stroke-width='3' fill='white'/><ellipse cx='80' cy='120' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/><ellipse cx='120' cy='120' rx='8' ry='12' stroke='black' stroke-width='2' fill='white'/></svg>`
-  },
+}
+,
   {
     name: "Flower",
     svg: `<svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='100' cy='100' r='30' stroke='black' stroke-width='3' fill='white'/><ellipse cx='100' cy='60' rx='20' ry='40' stroke='black' stroke-width='3' fill='white'/><ellipse cx='100' cy='140' rx='20' ry='40' stroke='black' stroke-width='3' fill='white'/><ellipse cx='60' cy='100' rx='40' ry='20' stroke='black' stroke-width='3' fill='white'/><ellipse cx='140' cy='100' rx='40' ry='20' stroke='black' stroke-width='3' fill='white'/></svg>`
@@ -84,7 +162,7 @@ const outlineImages = [
   },
 ];
 
-// Add shape SVGs for creative mode
+
 const creativeShapes = [
   {
     name: "Circle",
@@ -116,11 +194,11 @@ export const DrawingGame = ({ onGameComplete }: DrawingGameProps) => {
   const [score, setScore] = useState(0);
   const [startTime] = useState(Date.now());
   const [isDrawing, setIsDrawing] = useState(false);
-  const [currentColor, setCurrentColor] = useState("#FF6B6B");
+  const [currentColor, setCurrentColor] = useState("#e84d6fe0");
   const [brushSize, setBrushSize] = useState(5);
   const [mode, setMode] = useState<'drawing' | 'coloring'>("drawing");
   const [selectedOutline, setSelectedOutline] = useState<number | null>(null);
-  const [svgColor, setSvgColor] = useState<string>("#FF6B6B");
+  const [svgColor, setSvgColor] = useState<string>("#e34e4eff");
   const [creativeMode, setCreativeMode] = useState(false);
   const [placedShapes, setPlacedShapes] = useState<any[]>([]); // {type, color, x, y, id}
   const canvasRef = useRef<HTMLCanvasElement>(null);
