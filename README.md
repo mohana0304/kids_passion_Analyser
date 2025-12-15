@@ -16,6 +16,8 @@ This is a React-based web application featuring multiple mini-games aimed at imp
 
 ---
 
+🔗 **Live Demo:** https://kids-passion-analyser.vercel.app/
+
 ## ✨ Features
 
 - 🧩 Multiple interactive mini-games  
